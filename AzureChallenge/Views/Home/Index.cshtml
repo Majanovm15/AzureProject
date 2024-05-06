@@ -1,0 +1,52 @@
+﻿@model AllPhotos
+@using System.Text.Json;
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <div id="gallery">
+        <img id="photo" src="" alt="Photo">
+        <button class="btn" onclick="prevPhoto()">Previous</button>
+        <button class="btn" onclick="nextPhoto()">Next</button>
+    </div>
+
+    <div>
+        <h3>Non secret:</h3>
+        <p>@ViewData["NonSecretShared"]</p>
+    </div>
+    <div>
+        <h3>Secret:</h3>
+        <p>@ViewData["SecretShared"]</p>
+    </div>
+</div>
+
+<script>
+    const photos = @Html.Raw(Json.Serialize(Model.PhotoURLs));
+
+    let currentIndex = 0;
+    const photoElement = document.getElementById("photo");
+
+    function showPhoto(index) {
+        if (index < 0) {
+            index = photos.length - 1;
+        } else if (index >= photos.length) {
+            index = 0;
+        }
+        currentIndex = index;
+        photoElement.src = photos[index];
+    }
+
+    function prevPhoto() {
+        showPhoto(currentIndex - 1);
+    }
+
+    function nextPhoto() {
+        showPhoto(currentIndex + 1);
+    }
+
+    // Show the first photo initially
+    showPhoto(0);
+</script>
